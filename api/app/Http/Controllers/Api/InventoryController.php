@@ -12,7 +12,9 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        //
+        // Get all the inventory items for the current user
+
+
     }
 
     /**
