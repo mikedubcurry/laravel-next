@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from 'axios'
+
 // login form
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -6,18 +8,27 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
-    const data = await res.json();
-    console.log(data);
+    try {
+    const res = await axios.post('/api/auth/login',{
+      email,
+      password
+    })
+      console.log(res)
+    } catch (e) {
+      console.log(e)
+    }
+//    const res = await fetch("/api/auth/login", {
+//      method: "POST",
+//      headers: {
+//        "Content-Type": "application/json",
+//      },
+//      body: JSON.stringify({
+//        email,
+//        password,
+//      }),
+//    });
+//    const data = await res.json();
+//    console.log(data);
 
   };
 
