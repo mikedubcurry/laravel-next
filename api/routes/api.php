@@ -20,6 +20,18 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    $user = $request->user()->load('surveys.inventory.inventoryItems');
+    $token = $user->createToken('dmt-token')->plainTextToken;
+    return response()->json([
+        'user' => $user,
+        'token' => $token,
+    ]);
 });
 
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::get('/surveys', [App\Http\Controllers\Api\SurveyController::class, 'index']);
+    Route::get('/surveys/{survey}', [App\Http\Controllers\Api\SurveyController::class, 'show']);
+    Route::post('/surveys', [App\Http\Controllers\Api\SurveyController::class, 'store']);
+    Route::put('/surveys/{survey}', [App\Http\Controllers\Api\SurveyController::class, 'update']);
+    Route::delete('/surveys/{survey}', [App\Http\Controllers\Api\SurveyController::class, 'destroy']);
+});

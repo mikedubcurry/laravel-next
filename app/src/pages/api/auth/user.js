@@ -1,19 +1,20 @@
-import { apiClient, csrf } from "@lib/apiClient";
+import {apiClient, csrf} from "@/lib/apiClient";
+import cookie from "cookie";
 
 export default async function handler(req, res) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     // Process a POST request
-    const { name, email, password } = req.body;
     // send request to laravel api
     try {
       await csrf();
-      let r = await apiClient.post("/register", {
-        name,
-        email,
-        password,
+      const {token} = cookie.parse(req.headers.cookie);
+      let r = await apiClient.get("http://localhost/api/user",{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-      res.setHeader("Set-Cookie", r.headers["set-cookie"]);
-      res.status(200).json({ data: r.data });
+
+        res.status(200).json({ data: r.data });
     } catch (e) {
       console.log("ERROR: ", e);
       res.status(e.response.status).json({ message: e.response.data.message });
@@ -22,3 +23,4 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: "Bad request" });
   }
 }
+

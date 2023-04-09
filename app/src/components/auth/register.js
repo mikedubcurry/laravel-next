@@ -15,7 +15,6 @@ export default function Register() {
       email,
       password
     })
-      console.log(res)
     } catch (e) {
       console.log(e)
     }

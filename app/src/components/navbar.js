@@ -1,6 +1,14 @@
+import { useEffect } from "react";
+import { useAuth } from "@/services/useAuth";
 import Link from "next/link";
 
 export default function Navbar() {
+  const { user } = useAuth();
+
+  useEffect(() => {
+    //console.log("user: ", user);
+  }, [user]);
+
   return (
     <nav className="flex items-center justify-between w-full p-8">
       <Link href="/" className="text-3xl font-bold">
@@ -26,22 +34,37 @@ export default function Navbar() {
           </li>
         </ul>
         <ul className="flex flex-row items-center justify-between w-full gap-2">
-          <li className="w-full">
-            <Link
-              className="bg-orange-300 p-2 rounded-lg text-gray-700 flex justify-center items-center w-full"
-              href="/login"
-            >
-              Login
-            </Link>
-          </li>
-          <li className="w-full">
-            <Link
-              className="bg-blue-500 p-2 rounded-lg text-gray-200 flex justify-center items-center w-full"
-              href="/register"
-            >
-              Register
-            </Link>
-          </li>
+          {user ? (
+            <>
+              <li className="w-full">
+                <Link
+                  className="bg-blue-300 p-2 rounded-lg text-gray-700 flex justify-center items-center w-full"
+                  href="/api/auth/logout"
+                >
+                  Log Out
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="w-full">
+                <Link
+                  className="bg-orange-300 p-2 rounded-lg text-gray-700 flex justify-center items-center w-full"
+                  href="/login"
+                >
+                  Login
+                </Link>
+              </li>
+              <li className="w-full">
+                <Link
+                  className="bg-blue-500 p-2 rounded-lg text-gray-200 flex justify-center items-center w-full"
+                  href="/register"
+                >
+                  Register
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </nav>

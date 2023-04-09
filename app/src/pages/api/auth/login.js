@@ -1,4 +1,5 @@
-import axios from "axios";
+import { apiClient, csrf } from "@/lib/apiClient";
+import cookie from "cookie";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -6,17 +7,24 @@ export default async function handler(req, res) {
     const { email, password } = req.body;
     // send request to laravel api
     try {
-      const csrf = await axios.get("http://localhost/sanctum/csrf-cookie");
-      if (csrf.status === 204) {
-        let r = await axios.post("http://localhost/api/login", {
-          email,
-          password,
-        });
-        res.setHeader("Set-Cookie", r.headers["set-cookie"]);
-        res.status(200).json({ data: r.data });
-      } else {
-        throw csrf
-      }
+      await csrf();
+      let r = await apiClient.post("/login", {
+        email,
+        password,
+      });
+
+      res.setHeader(
+        "Set-Cookie",
+        cookie.serialize("token", r.data.token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== "development",
+          sameSite: "strict",
+          maxAge: 3600,
+          path: "/",
+        })
+      );
+
+      res.status(200).json({ data: r.data });
     } catch (e) {
       console.log("ERROR: ", e);
       res.status(e.response.status).json({ message: e.response.data.message });

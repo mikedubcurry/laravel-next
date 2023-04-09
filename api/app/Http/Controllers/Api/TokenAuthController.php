@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-
+// import fortify action
+use Laravel\Fortify\Actions\CreateNewUser;
 use App\Models\User;
 
 class TokenAuthController extends Controller
@@ -23,18 +24,14 @@ class TokenAuthController extends Controller
      */
     public function store(Request $request)
     {
-        // validate email and password, then store user, create token and return it
+        // use fortify to register user
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $user = (new CreateNewUser())->create($request->all());
 
         $token = $user->createToken('dmt-token')->plainTextToken;
 
@@ -42,8 +39,6 @@ class TokenAuthController extends Controller
             'token' => $token,
             'user' => $user,
         ]);
-
-
     }
 
     public function login (Request $request) {
