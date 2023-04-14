@@ -17,7 +17,9 @@ class SurveyController extends Controller
         // surveys belonging to user
         $surveys = Survey::where('surveyor_id', auth()->id())->get();
         // return json response
-        return response()->json($surveys);
+        return response()->json([
+            'surveys' => $surveys,
+        ]);
     }
 
     /**
@@ -51,7 +53,7 @@ class SurveyController extends Controller
     public function show(string $id)
     {
         // find survey
-        $survey = Survey::find($id);
+        $survey = Survey::where('surveyor_id', auth()->id())->where('id', $id)->first();
         // return json response
         return response()->json($survey);
     }

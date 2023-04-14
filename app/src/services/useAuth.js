@@ -78,6 +78,7 @@ function useProvideAuth() {
     });
 
   const fetchUser = async () => {
+    console.log('fetching user')
     try {
       await csrf();
       const response = await axios.get("/api/auth/user", {
@@ -88,6 +89,7 @@ function useProvideAuth() {
       });
 
       if (response.status !== 200) {
+        console.log('STATUS', response.status)
         setUser(null);
         setToken(null);
         return;

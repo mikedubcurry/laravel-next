@@ -1,4 +1,5 @@
 import { useAuth } from "@/services/useAuth";
+import Link from "next/link";
 import axios from "axios";
 import cookie from "cookie";
 
@@ -13,6 +14,11 @@ export default function Dashboard({ user }) {
           user.surveys.length &&
           user.surveys.map((survey) => (
             <li key={survey.id} className="flex flex-col gap-2">
+              <p>
+                <Link href={`/dashboard/surveys/${survey.id}`}>
+                  {survey.code}
+                </Link>
+              </p>
               <p>{survey.customer_name}</p>
               <p>{survey.customer_email}</p>
               <p>{survey.customer_phone}</p>

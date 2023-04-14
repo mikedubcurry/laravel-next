@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Survey>
@@ -22,6 +23,8 @@ class SurveyFactory extends Factory
             'customer_phone' => $this->faker->phoneNumber,
             'address_id' => $this->faker->numberBetween(1, 10),
             'surveyor_id' => $this->faker->numberBetween(1, 10),
+            // upper case 5 char string
+            'code' => Str::upper(Str::random(5)),
         ];
     }
 }
